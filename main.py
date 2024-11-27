@@ -1,42 +1,8 @@
-import json
-
 import sqlalchemy
 from sqlalchemy.orm import sessionmaker
 
-from models import create_tables, Publisher, Shop, Book, Stock, Sale
-
-
-def fill_schema(session):
-
-    with open('tests_data.json', 'r') as fd:
-        data = json.load(fd)
-
-    for record in data:
-        model = {
-            'publisher': Publisher,
-            'shop': Shop,
-            'book': Book,
-            'stock': Stock,
-            'sale': Sale,
-        }[record.get('model')]
-        session.add(model(id=record.get('pk'), **record.get('fields')))
-    session.commit()
-
-
-def find_info(session):
-    publish = input('Для начала поиска введите имя автора или его id: ')
-    if publish.isdigit():
-        for pub in session.query(Publisher).filter(Publisher.id == int(publish)).all():
-            print(pub)
-        print('Информация о продажах книг - точки продаж, стоимость товара, время покупки : ')
-        for s in session.query(Shop).join(Stock.shop).join(Book).join(Publisher).filter(Publisher.id==int(publish)).all():
-            print(s)
-    else:
-        for pub in session.query(Publisher).filter(Publisher.name.like(publish)).all():
-            print(pub)
-        print('Информация о продажах книг - точки продаж, стоимость товара, время покупки : ')
-        for s in session.query(Shop).join(Stock.shop).join(Book).join(Publisher).filter(Publisher.name==publish).all():
-            print(s)
+from ORM.funcs import fill_schema, find_info
+from models import create_tables
 
 
 if __name__ == "__main__":

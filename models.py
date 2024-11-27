@@ -7,7 +7,7 @@ Base = declarative_base()
 class Shop(Base):
     __tablename__ = 'shop'
 
-    shop_id = sql.Column(sql.Integer, primary_key=True)
+    id = sql.Column(sql.Integer, primary_key=True)
     name = sql.Column(sql.String(length=100), unique=True, nullable=False)
 
     def __str__(self):
@@ -17,7 +17,7 @@ class Shop(Base):
 class Publisher(Base):
     __tablename__ = 'publisher'
 
-    publisher_id = sql.Column(sql.Integer, primary_key=True)
+    id = sql.Column(sql.Integer, primary_key=True)
     name = sql.Column(sql.String(length=100), unique=True, nullable=False)
 
     def __str__(self):
@@ -27,9 +27,9 @@ class Publisher(Base):
 class Book(Base):
     __tablename__ = 'book'
 
-    book_id = sql.Column(sql.Integer, primary_key=True)
+    id = sql.Column(sql.Integer, primary_key=True)
     title = sql.Column(sql.String(length=100), unique=True, nullable=False)
-    id_publisher = sql.Column(sql.Integer, sql.ForeignKey('publisher.publisher_id'), nullable=False)
+    id_publisher = sql.Column(sql.Integer, sql.ForeignKey('publisher.id'), nullable=False)
 
     publisher = relationship(Publisher, backref='book')
 
@@ -37,9 +37,9 @@ class Book(Base):
 class Stock(Base):
     __tablename__ = 'stock'
 
-    stock_id = sql.Column(sql.Integer, primary_key=True)
-    book_id = sql.Column(sql.Integer, sql.ForeignKey('book.book_id'), nullable=False)
-    shop_id = sql.Column(sql.Integer, sql.ForeignKey('shop.shop_id'), nullable=False)
+    id = sql.Column(sql.Integer, primary_key=True)
+    id_book = sql.Column(sql.Integer, sql.ForeignKey('book.id'), nullable=False)
+    id_shop = sql.Column(sql.Integer, sql.ForeignKey('shop.id'), nullable=False)
     count = sql.Column(sql.Integer, nullable=False)
 
     book = relationship(Book, backref='stock')
@@ -49,10 +49,10 @@ class Stock(Base):
 class Sale(Base):
     __tablename__ = 'sale'
 
-    sale_id = sql.Column(sql.Integer, primary_key=True)
+    id = sql.Column(sql.Integer, primary_key=True)
     price = sql.Column(sql.Float, nullable=False)
     date_sale = sql.Column(sql.DateTime, nullable=False)
-    id_stock = sql.Column(sql.Integer, sql.ForeignKey('stock.stock_id'), nullable=False)
+    id_stock = sql.Column(sql.Integer, sql.ForeignKey('stock.id'), nullable=False)
     count = sql.Column(sql.Integer, nullable=False)
 
     stock = relationship(Stock, backref='sale')
